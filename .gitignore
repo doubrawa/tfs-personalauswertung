@@ -1,11 +1,17 @@
-# Generierte Reports (enthalten echte Projekt-/Personendaten!)
-*.html
+# Generierte Reports (enthalten echte Projekt-/Personendaten!) - NICHT docs/ (Frontend)
+Personalauswertung_*.html
+Entwicklervergleich_*.html
+*_Demo_*.html
 
 # Anmeldedaten / Secrets
 tfs_cred.xml
 *.clixml
 *.cred
 .env
+
+# Node
+node_modules/
+npm-debug.log*
 
 # Windows / Editor
 Thumbs.db

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TFS Personalauswertung &middot; Entwicklervergleich</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>TFS Personalauswertung</h1>
+    <div class="meta">Entwicklervergleich aus TFS / Azure DevOps Server (TFVC) &ndash; fair nach Arbeitszeit normiert</div>
+  </header>
+
+  <section class="card">
+    <h2>1 &middot; Verbindung</h2>
+    <div class="form-grid">
+      <label>Backend-URL
+        <input id="backend" type="text" placeholder="(leer = gleiche Adresse wie diese Seite)">
+        <small>Der Proxy-Dienst, der mit dem TFS spricht. Lokal leer lassen; auf GitHub Pages die URL deines selbst gehosteten Backends eintragen.</small>
+      </label>
+      <label>TFS-Adresse (Collection-URL)
+        <input id="baseUrl" type="text" placeholder="https://tfs-server/DefaultCollection">
+      </label>
+      <label>Projekt (optional)
+        <input id="project" type="text" placeholder="leer = ganze Collection">
+      </label>
+      <label>API-Version
+        <input id="apiVersion" type="text" value="3.0">
+        <small>TFS 2015 &rarr; 2.0 &middot; 2017 &rarr; 3.0 &middot; 2018 &rarr; 4.1 &middot; DevOps Server 2019+ &rarr; 5.0 (manche aelteren nur 1.0)</small>
+      </label>
+      <label>Benutzername
+        <input id="user" type="text" placeholder="DOMAIN\\benutzer oder benutzer@firma">
+      </label>
+      <label>Passwort
+        <input id="pass" type="password" placeholder="Passwort (oder PAT unten)">
+      </label>
+      <label>Personal Access Token (Alternative)
+        <input id="pat" type="password" placeholder="statt Benutzer/Passwort">
+      </label>
+      <label>Zeitraum (Monate)
+        <input id="months" type="number" value="12" min="1" max="60">
+      </label>
+      <label class="check"><input id="insecure" type="checkbox"> Zertifikatsfehler ignorieren (selbstsigniertes HTTPS)</label>
+      <label class="check"><input id="demo" type="checkbox"> Demo-Modus (ohne TFS, Beispieldaten)</label>
+    </div>
+    <div class="actions">
+      <button id="loadDevs" class="btn">Entwickler laden</button>
+      <span id="connStatus" class="status"></span>
+    </div>
+  </section>
+
+  <section class="card" id="selectCard" hidden>
+    <h2>2 &middot; Entwickler &amp; Arbeitszeit</h2>
+    <div class="form-grid">
+      <label>Entwickler A
+        <select id="devA"></select>
+      </label>
+      <label>Wochenstunden A
+        <input id="hoursA" type="number" value="40" min="1" max="80">
+      </label>
+      <label>Entwickler B
+        <select id="devB"></select>
+      </label>
+      <label>Wochenstunden B
+        <input id="hoursB" type="number" value="40" min="1" max="80">
+      </label>
+      <label>Vollzeit-Basis (h) f&uuml;r Normierung
+        <input id="fteHours" type="number" value="40" min="1" max="80">
+      </label>
+      <label class="check"><input id="includeFiles" type="checkbox"> Ge&auml;nderte Dateien je Changeset z&auml;hlen (langsamer)</label>
+    </div>
+    <div class="actions">
+      <button id="runCompare" class="btn btn-primary">Vergleich starten</button>
+      <span id="compStatus" class="status"></span>
+    </div>
+  </section>
+
+  <div id="report"></div>
+
+  <footer>
+    Statisches Frontend (GitHub Pages) + selbst gehosteter Proxy-Backend &middot;
+    <a href="https://github.com/doubrawa/tfs-personalauswertung">Quellcode</a>
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

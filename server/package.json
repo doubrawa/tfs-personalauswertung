@@ -1,0 +1,12 @@
+{
+  "name": "tfs-personalauswertung-backend",
+  "version": "1.0.0",
+  "description": "Proxy-Backend fuer die TFS-Personalauswertung (CORS + serverseitige TFS-REST-Abfragen). Abhaengigkeitsfrei.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": { "tfs-report-backend": "server.js" },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": { "node": ">=18" }
+}

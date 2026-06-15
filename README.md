@@ -96,16 +96,44 @@ Zusätzlich enthält der Vergleichsreport pro Entwickler einen vollständigen De
 - **Deutsche Status:** „Geschlossen/Erledigt/Behoben/Abgeschlossen/Fertig" werden erkannt; weitere bei Bedarf in `$doneStates` ergänzen.
 - **Changesets leer:** `-TfvcAuthor` exakt auf die TFVC-Kennung (`DOMAIN\konto`) setzen.
 
-## Roadmap
+## Web-Oberfläche (Browser)
 
-Geplant ist eine **Web-Oberfläche** (GitHub Pages): TFS-Adresse eingeben →
-Entwickler-Auswahl per Combobox → Vergleich per Knopfdruck.
+Zusätzlich zum PowerShell-Skript gibt es eine Weboberfläche: TFS-Adresse eingeben →
+**„Entwickler laden"** → zwei Entwickler + Wochenstunden wählen → **„Vergleich starten"**.
+Der Report (faire, auf Vollzeit normierte Kennzahlen + Monatsdiagramme) erscheint direkt
+auf der Seite.
 
-> ⚠️ **Technischer Hinweis dazu:** GitHub Pages liefert nur statische Dateien, und ein
-> Browser darf einen (internen) TFS-Server wegen **CORS** in der Regel nicht direkt per
-> JavaScript abfragen. Realistische Wege: ein kleiner Proxy/Backend-Dienst, eine
-> Browser-Erweiterung, eine lokale App, oder serverseitig aktivierte CORS-Header am TFS.
-> Dieser PowerShell-Stand ist die funktionierende Basis; die Web-Variante baut darauf auf.
+Aufbau (zwei Teile):
+- **`docs/`** – statisches Frontend (HTML/CSS/JS), für **GitHub Pages** geeignet.
+- **`server/`** – kleiner **Proxy-Backend** (Node, abhängigkeitsfrei).
+
+**Warum ein Backend?** GitHub Pages liefert nur statische Dateien, und ein Browser darf
+einen internen TFS-Server wegen **CORS** normalerweise nicht direkt per JavaScript abfragen.
+Der Proxy setzt CORS-Header und spricht serverseitig per REST mit dem TFS. Zugangsdaten
+werden nur durchgereicht (TFS Basic-Auth), **nie gespeichert**.
+
+> 🔒 Den Proxy **selbst hosten** (lokal oder im Firmennetz) – nicht öffentlich anbieten,
+> da er TFS-Zugangsdaten entgegennimmt.
+
+### Lokal starten (Frontend + Backend in einem Prozess)
+
+```bash
+cd server
+node server.js
+# dann im Browser: http://localhost:8787
+```
+
+Tipp: Die **Demo-Modus**-Checkbox zeigt die Oberfläche mit Beispieldaten – ganz ohne TFS.
+
+### GitHub Pages + separat gehostetes Backend
+
+1. Pages aktivieren: Repo → *Settings → Pages* → Branch `main`, Ordner `/docs`.
+2. Den Proxy (`server/server.js`) irgendwo erreichbar hosten (lokal, Firmenserver, VM/Container).
+3. Auf der Pages-Seite im Feld **„Backend-URL"** die Adresse deines Proxys eintragen.
+
+> Status: Die Web-UI zeigt die Vergleichs-Kennzahlen + drei Monatsdiagramme. Die
+> ausführlichen Einzel-Detailblöcke (Schätzabweichungen, Detailtabellen) gibt es derzeit
+> nur im PowerShell-Report – sie lassen sich später nachziehen.
 
 ## Lizenz
 
