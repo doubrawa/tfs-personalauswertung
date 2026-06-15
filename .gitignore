@@ -1,0 +1,14 @@
+# Generierte Reports (enthalten echte Projekt-/Personendaten!)
+*.html
+
+# Anmeldedaten / Secrets
+tfs_cred.xml
+*.clixml
+*.cred
+.env
+
+# Windows / Editor
+Thumbs.db
+desktop.ini
+.vs/
+*.user
