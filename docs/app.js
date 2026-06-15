@@ -70,6 +70,25 @@ function groupedBar(labels, A, B, nameA, nameB, colorA, colorB) {
   return s;
 }
 
+// --- Groesste Schaetzabweichungen (pro Entwickler) -----------------------
+function deviationsCard(m) {
+  const rows = (m.deviations || []).map((d) => {
+    const sign = d.diff > 0 ? 'over' : 'under';
+    const diffTxt = (d.diff > 0 ? '+' : '') + fmt(d.diff, 1) + ' h';
+    return `<tr><td class="id">#${d.id}</td><td>${esc(d.title)}</td><td class="num">${fmt(d.original, 1)}</td><td class="num">${fmt(d.completed, 1)}</td><td class="num ${sign}">${diffTxt}</td></tr>`;
+  }).join('');
+  const body = rows || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px">Keine geschätzten Aufgaben.</td></tr>';
+  return `
+    <div class="card">
+      <h2>Größte Schätzabweichungen &ndash; ${esc(m.name)}</h2>
+      <p class="desc">Aufgaben mit der größten Differenz zwischen Plan und Ist. Negative Werte = schneller als geplant.</p>
+      <table class="tbl">
+        <thead><tr><th>ID</th><th>Aufgabe</th><th class="num">Plan (h)</th><th class="num">Ist (h)</th><th class="num">Diff</th></tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>`;
+}
+
 // --- Report rendern ------------------------------------------------------
 function renderReport(data) {
   const [a, b] = data.metrics;
@@ -134,7 +153,9 @@ function renderReport(data) {
     <div class="card">
       <h2>Erfasste Arbeitszeit (Ist, Stunden) pro Monat <span class="sub" style="display:inline">(tatsächlich geleistet, nicht hochgerechnet)</span></h2>
       ${groupedBar(labels, a.actualByMonth, b.actualByMonth, a.name, b.name, cA, cB)}
-    </div>`;
+    </div>
+    ${deviationsCard(a)}
+    ${deviationsCard(b)}`;
   $('report').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
