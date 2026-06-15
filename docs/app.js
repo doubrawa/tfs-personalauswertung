@@ -95,7 +95,6 @@ function renderReport(data) {
   const fte = data.fteHours || 40;
   const fA = a.hours > 0 ? fte / a.hours : 1;
   const fB = b.hours > 0 ? fte / b.hours : 1;
-  const labels = data.months.map((m) => m.label);
 
   const rowsDef = [
     { label: 'Aufgaben erledigt', a: a.doneCount, b: b.doneCount, t: 'int', norm: true, better: 'high' },
@@ -123,10 +122,6 @@ function renderReport(data) {
     return `<tr><td>${esc(r.label)}${extra}</td><td class="num ${ca}">${formatMetric(vA, r.t)}${subA}</td><td class="num ${cb}">${formatMetric(vB, r.t)}${subB}</td></tr>`;
   }).join('');
 
-  const nTasksA = a.countByMonth.map((v) => v * fA), nTasksB = b.countByMonth.map((v) => v * fB);
-  const nCsA = a.csByMonth.map((v) => v * fA), nCsB = b.csByMonth.map((v) => v * fB);
-  const cA = '#2563eb', cB = '#16a34a';
-
   $('report').innerHTML = `
     <div class="card">
       <h2>Kennzahlen im Vergleich &ndash; fair nach Arbeitszeit</h2>
@@ -141,18 +136,6 @@ function renderReport(data) {
         <thead><tr><th>Kennzahl</th><th class="num">${esc(a.name)}<div class="sub">${a.hours} h/Woche</div></th><th class="num">${esc(b.name)}<div class="sub">${b.hours} h/Woche</div></th></tr></thead>
         <tbody>${rowsHtml}</tbody>
       </table>
-    </div>
-    <div class="card">
-      <h2>Erledigte Aufgaben pro Monat <span class="sub" style="display:inline">(auf ${fmt(fte, 0)}-h-Vollzeit hochgerechnet)</span></h2>
-      ${groupedBar(labels, nTasksA, nTasksB, a.name, b.name, cA, cB)}
-    </div>
-    <div class="card">
-      <h2>Changesets pro Monat <span class="sub" style="display:inline">(auf ${fmt(fte, 0)}-h-Vollzeit hochgerechnet)</span></h2>
-      ${groupedBar(labels, nCsA, nCsB, a.name, b.name, cA, cB)}
-    </div>
-    <div class="card">
-      <h2>Erfasste Arbeitszeit (Ist, Stunden) pro Monat <span class="sub" style="display:inline">(tatsächlich geleistet, nicht hochgerechnet)</span></h2>
-      ${groupedBar(labels, a.actualByMonth, b.actualByMonth, a.name, b.name, cA, cB)}
     </div>
     ${deviationsCard(a)}
     ${deviationsCard(b)}`;
